@@ -1,23 +1,18 @@
-#pragma once
-#ifndef LAB1_FUNC
-#define LAB1_FUNC
+#pragma once 
+#ifndef LAB1_FUNC 
+#define LAB1_FUNC 
 
-#define CHAR_SIZE sizeof(char)
+#define CHAR_SIZE sizeof(char) 
 
-#include <iostream>
-#include <fstream>
+#include <iostream> 
+#include <fstream> 
 
 int binary_array_size = 0;
 int jpg_file_size = 0;
 
 int* open_jpg_file_as_binary_array()
 {
-	FILE* jpg_file = NULL;
-	if (fopen_s(&jpg_file, "1623781112_img0.jpg", "r") != 0)
-	{
-		return NULL;
-		throw std::exception("Cannot open file or it doesn't exist!");
-	}
+	FILE* jpg_file = fopen("1623781112_img0.jpg", "r");
 
 	fseek(jpg_file, 0, SEEK_END);
 	jpg_file_size = ftell(jpg_file);
@@ -42,11 +37,7 @@ int* open_jpg_file_as_binary_array()
 
 void write_data_in_new_file(int* array, const char* file_name)
 {
-	FILE* data_file = NULL;
-	if (fopen_s(&data_file, file_name, "w+") != 0)
-	{
-		throw std::exception("Cannot open file or it doesn't exist!");
-	}
+	FILE* data_file = fopen(file_name, "w+");
 
 	for (int i = 0; i < binary_array_size; i++)
 	{
@@ -66,4 +57,4 @@ int* transforming_function(int* transformed_array)
 	return (result);
 }
 
-#endif 
+#endif
