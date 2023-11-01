@@ -141,45 +141,74 @@ void processing_by_std_thread(int thread_number, int* array, int array_size)
 
 void processing_by_OMP(int thread_number, int* array, int array_size)
 {
-#pragma omp parallel num_threads(thread_number)
+	#pragma omp parallel num_threads(thread_number)
 	{
 		int thread_id = omp_get_thread_num();
-
-		for (int i = array_size - thread_id - 1; i >= 0; i -= B)
+		for (int i = array_size - thread_id - 1; i >= 0; i -= thread_number)
 		{
-			array[i] = (i * array[i]) & 255;
+			array[i] = (i * array[i]) & 255;  
 		}
 	}
 }
 
 #pragma endregion
 
-#pragma region _CreateProcess_
+#pragma region _CreateProcess_   
+// with MapViewOfFile and CreateEvent (5c2 and 5d)
 
 void processing_by_CreateProcess(int thread_number, int* array, int array_size)
 {
-	for (int i = 0; i < B; i++)
+	HANDLE* Processes_array = new HANDLE[thread_number];
+	HANDLE Start_flag = CreateEvent(NULL, TRUE, FALSE, L"Global\\Start_processing");
+	STARTUPINFO* startup_Infos = new STARTUPINFO[thread_number];
+	PROCESS_INFORMATION* process_Infos = new PROCESS_INFORMATION[thread_number];
+
+	HANDLE h_Map_File = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, array_size * sizeof(int), L"Array");
+	int* shared_array = (int*)MapViewOfFile(h_Map_File, FILE_MAP_ALL_ACCESS, 0, 0, array_size * sizeof(int));
+
+	for (int i = 0; i < array_size; i++)
 	{
-		wstringstream s;
-		s << array;
-		wstring com_line = L"C:\\Users\\user\\source\\repos\\Parallel_programming_\\x64\\Debug\\Process_function.exe " + 
-			s.str() + L" " + to_wstring(array_size) + L" " + to_wstring(i);
-		STARTUPINFO startupInfo;
-		PROCESS_INFORMATION processInfo;
+		shared_array[i] = array[i];
+	}
 
-		ZeroMemory(&startupInfo, sizeof(startupInfo));
-		startupInfo.cb = sizeof(startupInfo);
-		ZeroMemory(&processInfo, sizeof(processInfo));
+	for (int i = 0; i < thread_number; i++)
+	{
+		ZeroMemory(&startup_Infos[i], sizeof(STARTUPINFO));
+		startup_Infos[i].cb = sizeof(STARTUPINFO);
+		ZeroMemory(&process_Infos[i], sizeof(PROCESS_INFORMATION));
 
-		if (CreateProcessW(nullptr, const_cast<wchar_t*>(com_line.c_str()), nullptr, nullptr, FALSE, 0, nullptr, nullptr, &startupInfo, &processInfo))
+		wstring com_line = L"C:\\Users\\user\\source\\repos\\Parallel_programming_\\x64\\Debug\\Process_function.exe " + to_wstring(array_size) + L" " + to_wstring(i);
+
+		if (CreateProcessW(nullptr, const_cast<wchar_t*>(com_line.c_str()), nullptr, nullptr, FALSE, 0, nullptr, nullptr, &startup_Infos[i], &process_Infos[i]))
 		{
-			CloseHandle(processInfo.hProcess);
-			CloseHandle(processInfo.hThread);
+			Processes_array[i] = process_Infos[i].hProcess;
 		}
-		else {
+		else 
+		{
 			cerr << "Error" << GetLastError() << endl;
 		}
 	}
+
+	SetEvent(Start_flag);
+	WaitForMultipleObjects(thread_number, Processes_array, TRUE, INFINITE);
+
+	for (int i = 0; i < thread_number; i++)
+	{
+		CloseHandle(Processes_array[i]);
+	}
+
+	for (int i = 0; i < array_size; i++)
+	{
+		array[i] = shared_array[i];
+	}
+	
+	UnmapViewOfFile(shared_array);
+	CloseHandle(h_Map_File);
+	CloseHandle(Start_flag);
+	/*delete[] shared_array;
+	delete[] Processes_array;
+	delete[] startup_Infos;
+	delete[] process_Infos;*/
 }
 
 #pragma endregion

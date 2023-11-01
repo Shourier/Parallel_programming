@@ -16,23 +16,39 @@ const int B = 7 + X % 7;					// B = 13
 int main()
 {
     LPWSTR cmdLine = GetCommandLine();
-
     int argc;
     LPWSTR* argv = CommandLineToArgvW(cmdLine, &argc);
 
     if (argv != nullptr) 
     {
-        /*wstring_convert<codecvt_utf8_utf16<wchar_t>> converter;
-        string str = converter.to_bytes(argv[1]);
+        HANDLE Start_flag = OpenEvent(SYNCHRONIZE, FALSE, L"Global\\Start_processing");
+        DWORD result = WaitForSingleObject(Start_flag, INFINITE);
 
-        int* array = reinterpret_cast<int*>(stoull(str, nullptr, 16));*/
-
-        int array_size = _wtoi(argv[2]);
-        int delta = _wtoi(argv[3]);
-
-        for (int i = array_size - delta - 1; i >= 0; i -= B)
+        if (result == WAIT_OBJECT_0)
         {
-            //array[i] = (i * array[i]) & 255;
+            int array_size = _wtoi(argv[1]);
+            int delta = _wtoi(argv[2]);
+
+            HANDLE h_Map_File = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, L"Array");
+            if (h_Map_File)
+            {
+                int* shared_array = (int*)MapViewOfFile(h_Map_File, FILE_MAP_ALL_ACCESS, 0, 0, array_size * sizeof(int));
+                if (shared_array) 
+                {
+                    for (int i = array_size - delta - 1; i >= 0; i -= B)
+                    {
+                        shared_array[i] = (i * shared_array[i]) & 255;
+                    }
+                }
+                UnmapViewOfFile(shared_array);
+                CloseHandle(h_Map_File);
+            }
+
+            CloseHandle(Start_flag);
+        }
+        else
+        {
+            CloseHandle(Start_flag);
         }
 
         LocalFree(argv);

@@ -82,10 +82,12 @@ int main()
         duration<float> proc_time = finish - start;
         cout << "Without parallel programming methods time: " << proc_time.count() << endl;
 
+
         key_t key = ftok(".", 'S');
         int shmid = shmget(key, binary_array_size * sizeof(int), IPC_CREAT | 0666);
 
         int* array_copy_0 = (int*)shmat(shmid, NULL, 0);
+
         for (int j = 0; j < binary_array_size; j++)
         {
             array_copy_0[j] = array[j];
