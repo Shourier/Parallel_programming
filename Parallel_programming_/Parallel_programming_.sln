@@ -9,6 +9,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Process_function", "Process
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Linux_parallel_programming", "Linux_parallel_programming\Linux_parallel_programming.vcxproj", "{55002838-A09A-4FA3-94C1-5E6F03FBFDEB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cuda_parallel", "Cuda_parallel\Cuda_parallel.vcxproj", "{132C74F1-8909-48AF-8E73-E6F335BDE681}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MPI_parallel", "MPI_parallel\MPI_parallel.vcxproj", "{408F07C5-F2C3-48AC-8BAF-927E80FA08C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -41,6 +45,22 @@ Global
 		{55002838-A09A-4FA3-94C1-5E6F03FBFDEB}.Release|x64.Build.0 = Release|x64
 		{55002838-A09A-4FA3-94C1-5E6F03FBFDEB}.Release|x86.ActiveCfg = Release|Win32
 		{55002838-A09A-4FA3-94C1-5E6F03FBFDEB}.Release|x86.Build.0 = Release|Win32
+		{132C74F1-8909-48AF-8E73-E6F335BDE681}.Debug|x64.ActiveCfg = Debug|x64
+		{132C74F1-8909-48AF-8E73-E6F335BDE681}.Debug|x64.Build.0 = Debug|x64
+		{132C74F1-8909-48AF-8E73-E6F335BDE681}.Debug|x86.ActiveCfg = Debug|x64
+		{132C74F1-8909-48AF-8E73-E6F335BDE681}.Debug|x86.Build.0 = Debug|x64
+		{132C74F1-8909-48AF-8E73-E6F335BDE681}.Release|x64.ActiveCfg = Release|x64
+		{132C74F1-8909-48AF-8E73-E6F335BDE681}.Release|x64.Build.0 = Release|x64
+		{132C74F1-8909-48AF-8E73-E6F335BDE681}.Release|x86.ActiveCfg = Release|x64
+		{132C74F1-8909-48AF-8E73-E6F335BDE681}.Release|x86.Build.0 = Release|x64
+		{408F07C5-F2C3-48AC-8BAF-927E80FA08C6}.Debug|x64.ActiveCfg = Debug|x64
+		{408F07C5-F2C3-48AC-8BAF-927E80FA08C6}.Debug|x64.Build.0 = Debug|x64
+		{408F07C5-F2C3-48AC-8BAF-927E80FA08C6}.Debug|x86.ActiveCfg = Debug|Win32
+		{408F07C5-F2C3-48AC-8BAF-927E80FA08C6}.Debug|x86.Build.0 = Debug|Win32
+		{408F07C5-F2C3-48AC-8BAF-927E80FA08C6}.Release|x64.ActiveCfg = Release|x64
+		{408F07C5-F2C3-48AC-8BAF-927E80FA08C6}.Release|x64.Build.0 = Release|x64
+		{408F07C5-F2C3-48AC-8BAF-927E80FA08C6}.Release|x86.ActiveCfg = Release|Win32
+		{408F07C5-F2C3-48AC-8BAF-927E80FA08C6}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
